@@ -1,0 +1,1 @@
+A small site that demonstrates how [https://github.com/krasimir/pairify](https://github.com/krasimir/pairify) works. Deployed at [https://pairify.krasimir.now.sh](https://pairify.krasimir.now.sh).

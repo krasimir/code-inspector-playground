@@ -1,0 +1,26 @@
+{
+  "name": "code-inspector-playground",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"now dev\" \"watchify ./src/app.js -o ./public/app.js -v\"",
+    "release": "browserify ./src/app.js -o ./public/app.js && now --prod"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krasimir/pairify-playground.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/krasimir/pairify-playground/issues"
+  },
+  "homepage": "https://github.com/krasimir/pairify-playground#readme",
+  "dependencies": {
+    "browserify": "16.5.0",
+    "concurrently": "5.1.0",
+    "code-inspector": "1.3.1",
+    "watchify": "3.11.1"
+  }
+}

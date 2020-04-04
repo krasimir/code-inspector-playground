@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "public/*.*", "use": "@now/static" },
+    { "src": "*.js", "use": "@now/node" }
+  ],
+  "routes": [
+    { "src": "/assets/(.*)", "dest": "/public/$1" },
+    { "src": "/(.*)", "dest": "/index.js" }
+  ]
+}

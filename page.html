@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Inspector</title>
+  <link rel="stylesheet" href="assets/codemirror.css">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="https://unpkg.com/code-inspector@latest/browser/code-inspector.js"></script>
+</head>
+<body>
+  <h1><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-align-left"><line x1="17" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg> CodeInspector</h1>
+  <h2 style="font-weight: normal;">
+    Static analysis of your code.
+  </h2>
+  <p style="margin: 2em auto;">
+    <a href="https://github.com/krasimir/code-inspector" target="_blank">Documentation</a> ✭ 
+    <a href="https://krasimirtsonev.com/blog" target="_blank">Author</a>
+  </p>
+  <div class="container-wrapper">
+    <div class="container">
+      <div class="editor column">
+        <label>
+          <input type="checkbox" class="mark-current-scope"/> mark current scope
+        </label>
+        <textarea></textarea>
+        <div class="cursor"></div>
+      </div>
+      <div class="tokens column">
+        <label>
+          <input type="checkbox" class="raw-analysis"/> raw analysis
+        </label>
+        <div class="links"></div>
+      </div>
+    </div>
+  </div>
+  <div class="how-to">
+    <pre><code>// blah</code></pre>
+  </div>
+  <h2 style="padding-top:2em;">
+    Where you may need this?
+  </h2>
+  <p>Static analysis of your code</p>
+  <footer>
+    <a class="github-button" href="https://github.com/krasimir/code-inspector" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star krasimir/code-inspector on GitHub">Star</a>
+    <br /><br />
+    <a href="https://github.com/krasimir/code-inspector">github.com/krasimir/code-inspector</a>
+  </footer>
+  <script src="/assets/codemirror.js"></script>
+  <script src="/assets/javascript.js"></script>
+  <script src="/assets/xml.js"></script>
+  <script src="/assets/jsx.js"></script>
+  <script src="/assets/app.js"></script>
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1621908-17"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-1621908-17');
+  </script>
+
+
+</body>
+</html>
