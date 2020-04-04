@@ -20,15 +20,14 @@
   <div class="container-wrapper">
     <div class="container">
       <div class="editor column">
-        <label>
-          <input type="checkbox" class="mark-current-scope"/> mark current scope
-        </label>
         <textarea></textarea>
-        <div class="cursor"></div>
       </div>
       <div class="tokens column">
         <label>
-          <input type="checkbox" class="raw-analysis"/> raw analysis
+          <select name="type-of-analysis">
+            <option value="scopes">scopes</option>
+            <option value="all">all nodes</option>
+          </select>
         </label>
         <div class="links"></div>
       </div>

@@ -25,54 +25,67 @@ function Example() {
 function printAnswer(answer) {
   console.log(\`The answer is: \${answer}\`);
 }`;
-let currentPairs = [];
-let currentScopeMarker = null;
-let markScope = false;
+let currentNodes = [];
+let currentEditorMarker = null;
 let rawAnalysis = false;
+let typeOfAnalysis = 'scopes';
 
 function analyze() {
-  const pairs = pairify.analyze(editor.getValue());
+  try {
+    rawAnalysis = CodeInspector.analyze(editor.getValue());
+  } catch(err) {
+    $('.tokens .links').innerHTML = err.toString();
+    return;
+  }
 
-  if (rawAnalysis) {
-    $('.tokens .links').innerHTML = `<div class="raw"><pre><code>[\n${
-      pairs.map(pair => {
-        return `  ${JSON.stringify(pair)}`;
-      }).join(',\n')
-    }\n]</code></pre></div>`;
-  } else {
-    const pairsByType = pairs.reduce((res, pair) => {
-      if (!res[pair.type]) res[pair.type] = [];
-      res[pair.type].push(pair);
-      return res;
-    }, {});
-    currentPairs = Object.keys(pairsByType)
-    .reduce((res, type) => {
-      return res.concat(pairsByType[type]);
-    }, []);
+  switch (typeOfAnalysis) {
+    case 'scopes':
+      currentNodes = rawAnalysis.scopes;
+      break;
+    case 'all':
+      currentNodes = rawAnalysis.nodes;
+      break;
+    default:
+      break;
+  }
+
+  if (currentNodes) {
     $('.tokens .links').innerHTML = '<ul>' + 
-      currentPairs
-      .map((pair, idx) => {
-        return `
-          <a href="javascript:void(0)" onMouseOver="javascript:pairOver(${idx})"><strong>${pair.type}</strong> <small>${pair.from[0]}:${pair.from[1]} ― ${pair.to[0]}:${pair.to[1]}</small></a>
-        `;
-      })
-      .map(link => `<li>${link}</li>`).join('') + '</ul>';
+      currentNodes
+        .map((node, idx) => {
+          const text = node.text.toString().replace(/</g, '&lt;');
+          return `
+            <a href="javascript:void(0)"
+              style="margin-left: ${(node.nesting-1) * 1}em;"
+              onMouseOver="javascript:nodeOver(${idx})"
+              onMouseOut="javascript:nodeOut()">
+                ${text}
+            </a>
+          `;
+        })
+        .map(link => `<li>${link}</li>`).join('') + '</ul>';
   }
 }
 
-window.pairOver = (pairIdx) => {
-  const pair = currentPairs[parseInt(pairIdx)];
-  if (pair) {
-    if (currentScopeMarker) {
-      currentScopeMarker.clear();
+window.nodeOver = (pairIdx) => {
+  const node = currentNodes[parseInt(pairIdx)];
+  if (node) {
+    if (currentEditorMarker) {
+      currentEditorMarker.clear();
     }
-    currentScopeMarker = editor.markText(
-      { line: pair.from[0]-1, ch: pair.from[1]-1 },
-      { line: pair.to[0]-1, ch: pair.to[1]-1 },
-      { className: 'pairify-pair' }
+    currentEditorMarker = editor.markText(
+      { line: node.start[0]-1, ch: node.start[1]-1 },
+      { line: node.end[0]-1, ch: node.end[1]-1 },
+      { className: 'ci-pair' }
     )
   } else {
-    console.warn(`Pair with index ${pairIdx} not found!`)
+    console.warn(`Node with index ${pairIdx} not found!`)
+  }
+}
+
+window.nodeOut = () => {
+  if (currentEditorMarker) {
+    currentEditorMarker.clear();
   }
 }
 
@@ -81,20 +94,7 @@ window.onload = function () {
   function onCursorActivity() {
     if (focused) {
       const { line, ch } = editor.getCursor();
-      $('.cursor').innerHTML = `${line+1}:${ch+1}`;
       
-      const matchingPairs = pairify.match(editor.getValue(), line+1, ch+1).filter(({ type }) => type === 'curly');
-      if (currentScopeMarker) {
-        currentScopeMarker.clear();
-      }
-      if (matchingPairs.length > 0 && markScope) {
-        const {from, to} = matchingPairs.pop();
-        currentScopeMarker = editor.markText(
-          { line: from[0]-1, ch: from[1]-1 },
-          { line: to[0]-1, ch: to[1]-1 },
-          { className: 'pairify-scope' }
-        )
-      }
     }
   }
   editor = CodeMirror.fromTextArea($('.editor textarea'), {
@@ -107,26 +107,17 @@ window.onload = function () {
   editor.on('cursorActivity', onCursorActivity);
   editor.on('focus', () => {
     focused = true;
-    $('.cursor').style.display = 'block';
     setTimeout(onCursorActivity, 1);
   });
   editor.on('blur', () => {
     focused = false;
-    $('.cursor').style.display = 'none';
-    if (currentScopeMarker) {
-      currentScopeMarker.clear();
+    if (currentEditorMarker) {
+      currentEditorMarker.clear();
     }
   });
 
-  $('.mark-current-scope').addEventListener('change', () => {
-    markScope = !markScope;
-    if (currentScopeMarker) {
-      currentScopeMarker.clear();
-    }
-  });
-
-  $('.raw-analysis').addEventListener('change', () => {
-    rawAnalysis = !rawAnalysis;
+  $('[name="type-of-analysis"]').addEventListener('change', (e) => {
+    typeOfAnalysis = e.target.value;
     analyze();
   });
 
