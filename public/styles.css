@@ -97,13 +97,15 @@ label {
   margin-top: 2em;
 }
 .how-to pre {
-  max-width: 460px;
-  font-size: 1em;
+  max-width: 850px;
+  font-size: 0.8em;
   margin: 2em auto;
   padding: 2em;
   background: #f0f0f0;
   border: solid 1px #999;
   border-radius: 4px;
+  word-break: break-all;
+  white-space: pre-wrap;
 }
 .raw pre {
   font-size: 0.8em;
@@ -155,4 +157,14 @@ select:focus {
 }
 select option {
 	font-weight:normal;
+}
+p.narrow {
+  max-width: 600px;
+}
+.renderjson {
+  font-family: inherit;
+  font-size: 0.9em;
+}
+.renderjson a {
+  padding: 0.1em 0.2em
 }

@@ -1,68 +1,88 @@
 const $ = sel => document.querySelector(sel);
 let editor;
 
-const CODE = `import React, { useState, useEffect } from 'react';
-
-function Example() {
-  const [count, setCount] = useState(0);
-
-  // Similar to componentDidMount and componentDidUpdate:
-  useEffect(() => {
-    document.title = \`You clicked \${count} times\`;
-  });
-
-  return (
-    <div>
-      <p>You clicked {count} times</p>
-      <button onClick={() => setCount(count + 1)}>
-        Click me
-      </button>
-    </div>
-  );
+const CODE = `class Greeter {
+  greeting: string;
+  constructor(message: string) {
+    this.greeting = message;
+  }
+  greet() {
+    return \`Hello, \${this.greeting}\`;
+  }
 }
 
-function printAnswer(answer) {
-  console.log(\`The answer is: \${answer}\`);
-}`;
+type User = {
+  firstName: string;
+  lastName: string;
+}
+
+function getName(user: User):string {
+  return Object.keys(user)
+    .map(field => user[field])
+    .join(' ');
+}
+
+let greeter = new Greeter(
+  getName({
+    firstName: 'Krasimir',
+    lastName: 'Tsonev'
+  })
+);`;
 let currentNodes = [];
 let currentEditorMarker = null;
 let rawAnalysis = false;
 let typeOfAnalysis = 'scopes';
 
 function analyze() {
+  const container = $('.tokens .links');
   try {
     rawAnalysis = CodeInspector.analyze(editor.getValue());
   } catch(err) {
-    $('.tokens .links').innerHTML = err.toString();
+    container.innerHTML = err.toString();
     return;
   }
 
   switch (typeOfAnalysis) {
     case 'scopes':
       currentNodes = rawAnalysis.scopes;
+      container.innerHTML = '<ul>' + 
+        currentNodes
+          .map((node, idx) => {
+            const text = node.text.toString().replace(/</g, '&lt;');
+            const style = `margin-left: ${(node.nesting) * 1}em;`;
+            return `
+              <a href="javascript:void(0)"
+                style="${style}"
+                onMouseOver="javascript:nodeOver(${idx})"
+                onMouseOut="javascript:nodeOut()">
+                  ${text} <small>${node.type}</small>
+              </a>
+            `;
+          })
+          .map(link => `<li>${link}</li>`).join('') + '</ul>';
       break;
     case 'all':
       currentNodes = rawAnalysis.nodes;
+      container.innerHTML = '<ul>' + 
+        currentNodes
+          .map((node, idx) => {
+            const text = node.text.toString().replace(/</g, '&lt;');
+            return `
+              <a href="javascript:void(0)"
+                onMouseOver="javascript:nodeOver(${idx})"
+                onMouseOut="javascript:nodeOut()">
+                  ${text} <small>${node.type}</small>
+              </a>
+            `;
+          })
+          .map(link => `<li style="display: inline-block;">${link}</li>`).join('') + '</ul>';
+      break;
+    case 'ast':
+      container.innerHTML = '';
+      container.appendChild(renderjson(rawAnalysis.ast));
       break;
     default:
       break;
-  }
-
-  if (currentNodes) {
-    $('.tokens .links').innerHTML = '<ul>' + 
-      currentNodes
-        .map((node, idx) => {
-          const text = node.text.toString().replace(/</g, '&lt;');
-          return `
-            <a href="javascript:void(0)"
-              style="margin-left: ${(node.nesting-1) * 1}em;"
-              onMouseOver="javascript:nodeOver(${idx})"
-              onMouseOut="javascript:nodeOut()">
-                ${text}
-            </a>
-          `;
-        })
-        .map(link => `<li>${link}</li>`).join('') + '</ul>';
   }
 }
 
@@ -89,6 +109,9 @@ window.nodeOut = () => {
 }
 
 window.onload = function () {
+  renderjson.set_icons('+', '-');
+  renderjson.set_show_to_level(2);
+  
   let focused = false;
   function onCursorActivity() {
     if (focused) {

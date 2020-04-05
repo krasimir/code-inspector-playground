@@ -7,9 +7,10 @@
   <link rel="stylesheet" href="assets/codemirror.css">
   <link rel="stylesheet" href="assets/styles.css">
   <script src="https://unpkg.com/code-inspector@latest/browser/code-inspector.js"></script>
+  <script src="https://unpkg.com/renderjson@1.4.0/renderjson.js"></script>
 </head>
 <body>
-  <h1><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-align-left"><line x1="17" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg> CodeInspector</h1>
+  <h1><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-align-left"><line x1="17" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg><br />CodeInspector</h1>
   <h2 style="font-weight: normal;">
     Static analysis of your code.
   </h2>
@@ -25,8 +26,9 @@
       <div class="tokens column">
         <label>
           <select name="type-of-analysis">
-            <option value="scopes">scopes</option>
-            <option value="all">all nodes</option>
+            <option value="scopes">analysis.scopes</option>
+            <option value="all">analysis.nodes</option>
+            <option value="ast">analysis.ast</option>
           </select>
         </label>
         <div class="links"></div>
@@ -34,12 +36,19 @@
     </div>
   </div>
   <div class="how-to">
-    <pre><code>// blah</code></pre>
+    <pre><code>import CodeInspector from 'code-inspector';
+
+const analysis = CodeInspector.analyze(code);</code></pre>
+    <p>or</p>
+    <pre><code>&lt;script src="https://unpkg.com/code-inspector@latest/browser/code-inspector.js">&lt;/script>
+&lt;script>
+  const analysis = CodeInspector.analyze(code);
+&lt;/script></code></pre>
   </div>
   <h2 style="padding-top:2em;">
     Where you may need this?
   </h2>
-  <p>Static analysis of your code</p>
+  <p class="narrow">I used it in a <a href="https://marketplace.visualstudio.com/items?itemName=krasimir.kalia" target="_blank">VSCode extension</a> where I analyze the currently open file and provide a quick shortcut to the function scopes. So, every task that requires work with the abstract syntax tree may get some help from this tool.</p>
   <footer>
     <a class="github-button" href="https://github.com/krasimir/code-inspector" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star krasimir/code-inspector on GitHub">Star</a>
     <br /><br />
