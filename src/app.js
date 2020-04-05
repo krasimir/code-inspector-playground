@@ -61,8 +61,24 @@ function analyze() {
           })
           .map(link => `<li>${link}</li>`).join('') + '</ul>';
       break;
-    case 'all':
+    case 'nodes':
       currentNodes = rawAnalysis.nodes;
+      container.innerHTML = '<ul>' + 
+        currentNodes
+          .map((node, idx) => {
+            const text = node.text.toString().replace(/</g, '&lt;');
+            return `
+              <a href="javascript:void(0)"
+                onMouseOver="javascript:nodeOver(${idx})"
+                onMouseOut="javascript:nodeOut()">
+                  ${text} <small>${node.type}</small>
+              </a>
+            `;
+          })
+          .map(link => `<li style="display: inline-block;">${link}</li>`).join('') + '</ul>';
+      break;
+    case 'variables':
+      currentNodes = rawAnalysis.variables;
       container.innerHTML = '<ul>' + 
         currentNodes
           .map((node, idx) => {
@@ -80,6 +96,9 @@ function analyze() {
     case 'ast':
       container.innerHTML = '';
       container.appendChild(renderjson(rawAnalysis.ast));
+      break;
+    case 'raw':
+      container.innerHTML = `<textarea class="raw">${JSON.stringify(rawAnalysis, null, 2)}</textarea>`;
       break;
     default:
       break;

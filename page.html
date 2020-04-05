@@ -6,7 +6,7 @@
   <title>Code Inspector</title>
   <link rel="stylesheet" href="assets/codemirror.css">
   <link rel="stylesheet" href="assets/styles.css">
-  <script src="https://unpkg.com/code-inspector@latest/browser/code-inspector.js"></script>
+  <script src="https://unpkg.com/code-inspector@1.4.0/browser/code-inspector.js"></script>
   <script src="https://unpkg.com/renderjson@1.4.0/renderjson.js"></script>
 </head>
 <body>
@@ -27,8 +27,10 @@
         <label>
           <select name="type-of-analysis">
             <option value="scopes">analysis.scopes</option>
-            <option value="all">analysis.nodes</option>
+            <option value="nodes">analysis.nodes</option>
+            <option value="variables">analysis.variables</option>
             <option value="ast">analysis.ast</option>
+            <option value="raw">raw analysis output</option>
           </select>
         </label>
         <div class="links"></div>
