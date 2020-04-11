@@ -97,6 +97,10 @@ function analyze() {
       container.innerHTML = '';
       container.appendChild(renderjson(rawAnalysis.ast));
       break;
+    case 'tree':
+      container.innerHTML = '';
+      container.appendChild(renderjson(rawAnalysis.tree));
+      break;
     case 'raw':
       container.innerHTML = `<textarea class="raw">${JSON.stringify(rawAnalysis, null, 2)}</textarea>`;
       break;
